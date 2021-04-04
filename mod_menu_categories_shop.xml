@@ -11,7 +11,7 @@
 	<description>MOD_MENU_CATEGORIES_DESC</description>
 	<files>
         <folder>assets</folder>
-        <folder>forms</folder>
+
         <folder>language</folder>
         <folder>tmpl</folder>
         <filename module="mod_menu_categories_shop">mod_menu_categories_shop.php</filename>
