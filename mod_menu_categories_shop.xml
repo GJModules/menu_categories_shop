@@ -7,18 +7,35 @@
 	<license>GNU General Public License</license>
 	<authorEmail></authorEmail>
 	<authorUrl></authorUrl>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 	<description>MOD_MENU_CATEGORIES_DESC</description>
 	<files>
         <folder>assets</folder>
 
+        <folder>helpers</folder>
         <folder>language</folder>
+        <folder>sql</folder>
         <folder>tmpl</folder>
         <filename module="mod_menu_categories_shop">mod_menu_categories_shop.php</filename>
         <filename>helper.php</filename>
     </files>
+	<install> <!-- Runs on install -->
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	<uninstall> <!-- Runs on uninstall -->
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+	<update> <!-- Runs on update; New since J2.5 -->
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
 	<updateservers>
-		<server type="extension" name="JoomShopping - Mod menu categories By Gartes update">https://raw.githubusercontent.com/Gartes-JoomShopping/mod_jshopping_random_m/main/update.xml</server>
+		<server type="extension" name="JoomShopping - Mod menu categories By Gartes update">https://raw.githubusercontent.com/GJModules/menu_categories_shop/main/update.xml</server>
 	</updateservers>
     <!--<languages>
         <language
@@ -38,8 +55,32 @@
                 	class="__v"
                 	filter="raw" />
 
+				<!-- Сортировка -->
+				<field name="sort"
+						type="list"
+						default="id"
+						label="SORT"
+						description="SORT CATEGORIES BY">
+					<option value="id">ID</option>
+					<option value="name">NAME</option>
+					<option value="order">ORDERING</option>
+				</field>
 
-            </fieldset>
+				<field name="selector_key"
+					type="text"
+					default="#fat-menu"
+					class="selector_key "
+					size="20"
+					readonly=""
+					required=""
+					label="MOD_MENU_CATEGORIES_SHOP_SELECTOR_KEY"
+					description="MOD_MENU_CATEGORIES_SHOP_SELECTOR_KEY_DESC"
+					showon=""
+					hint=""
+					filter="raw" />
+					
+					
+			</fieldset>
 
 
 

@@ -9,74 +9,39 @@
      *------------------------------------------------------------------------------------------------------------------
      *
      * @author     Gartes | sad.net79@gmail.com | Skype : agroparknew | Telegram : @gartes
-     * @date       30.11.2020 08:19
-     * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+     * @date       05.04.2021 06:47
+     * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
      * @license    GNU General Public License version 2 or later;
      ******************************************************************************************************************/
-
-    use Joomla\CMS\Factory;
-    use Joomla\CMS\Helper\ModuleHelper;
-    use Joomla\CMS\Table\Table;
-    use Joomla\CMS\Uri\Uri;
-
-    defined('_JEXEC') or die('Restricted access');
-    /**
-     * @var stdClass                 $module Объект модуля
-     * @var Joomla\Registry\Registry $params Настройки модуля
-     */
-    require_once dirname(__FILE__) . '/helper.php';
-
-    $doc = \Joomla\CMS\Factory::getDocument();
-    $doc->addStyleSheet('/modules/mod_menu_categories_shop/assets/css/mod_menu_categories_shop.css');
-    $doc->addScript('/modules/mod_menu_categories_shop/assets/js/mod_menu_categories_shop.js');
-    $Helper = ModMenuCategoriesShopHelper::instance($params);
+    defined('_JEXEC') or die; // No direct access to this file
 
 
-
-    $field_sort = $params->get('sort', 'id');
-    $ordering = $params->get('ordering', 'asc');
-    $show_image = $params->get('show_image',0);
-
-    $category_id = JRequest::getInt('category_id');
-    $category = JTable::getInstance('category', 'jshop');
-    $category->load($category_id);
-    $categories_id = $category->getTreeParentCategories();
-    $categories_arr = $Helper::getCatsArray($field_sort, $ordering, $category_id, $categories_id);
-
-
-    JLoader::import('categories', JPATH_ROOT.'/administrator/components/com_jshopping/models');
-    $_categories = JSFactory::getModel("categories");
-    $categories_arr = $_categories->getTreeAllCategories( ['category_publish'=>1] , "ordering" ,  "asc" );
-
-
-    /*echo'<pre>';print_r( $categories_arr );echo'</pre>'.__FILE__.' '.__LINE__ . PHP_EOL;
-    die(__FILE__ .' '. __LINE__ );*/
-
-
-
-
-
-    $jshopConfig = JSFactory::getConfig();
-
-    $layout = $params->get('layout', 'default');
-    require(JModuleHelper::getLayoutPath('mod_menu_categories_shop', $layout));
-
-    /*echo'<pre>';print_r( $categories_arr );echo'</pre>'.__FILE__.' '.__LINE__ . PHP_EOL;
-    die(__FILE__ .' '. __LINE__ );*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+?>
+<!-- brand - Производители -->
+<ul class="menu__main-brands"><!----><!---->
+    <li class="menu__main-brand">
+        <a href="https://rozetka.com.ua/producer/rozetka/" title="Rozetka"><img
+                src="https://i2.rozetka.ua/producers/26/26193.png" alt="Rozetka"></a></li>
+    <!---->
+    <li class="menu__main-brand"><a href="https://rozetka.com.ua/apple/c4627486/" title="Apple"><img
+                src="https://i2.rozetka.ua/producers/8/8935.png" alt="Apple"></a></li>
+    <!---->
+    <li class="menu__main-brand"><a href="https://rozetka.com.ua/producer/samsung/"
+                                    title="Samsung"><img
+                src="https://i1.rozetka.ua/producers/8/8823.png" alt="Samsung"></a></li>
+    <!---->
+    <li class="menu__main-brand"><a
+            href="https://rozetka.com.ua/producer/lenovo/?section_id=80253"
+            title="Lenovo"><img src="https://i2.rozetka.ua/producers/23/23951.png"
+                                alt="Lenovo"></a></li><!---->
+    <li class="menu__main-brand"><a
+            href="https://rozetka.com.ua/producer/asus/?section_id=80253" title="Asus"><img
+                src="https://i2.rozetka.ua/producers/8/8893.png" alt="Asus"></a></li><!---->
+    <li class="menu__main-brand"><a href="https://rozetka.com.ua/producer/acer/"
+                                    title="Acer"><img
+                src="https://i2.rozetka.ua/producers/21/21471.jpg" alt="Acer"></a></li>
+    <!---->
+    <li class="menu__main-brand"><a href="https://rozetka.com.ua/pages/logitech/"
+                                    title="Logitech"><img
+                src="https://i1.rozetka.ua/producers/27/27945.png" alt="Logitech"></a></li>
+</ul>
