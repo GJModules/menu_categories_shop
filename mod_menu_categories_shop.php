@@ -26,7 +26,32 @@
      */
     require_once dirname(__FILE__) . '/helper.php';
 
-    JLoader::registerNamespace( 'GNZ11' , JPATH_LIBRARIES . '/GNZ11' , $reset = false , $prepend = false , $type = 'psr4' );
+
+    /**
+     * Для правильной работы модуля требуется библиотека GNZ11
+     * Скачать можно по ссылке :
+     * https://github.com/Gartes-JoomShopping/mod_jshopping_random_m/archive/refs/heads/main.zip
+     *
+     * Установка через Менеджер установки (Рекомендуется - для получения обновлений)
+     * или просто распаковать в  директорию  /libraries
+     *
+     */
+    try
+    {
+        $GNZ11_path =  JPATH_LIBRARIES . '/GNZ11' ;
+        JLoader::registerNamespace( 'GNZ11' , $GNZ11_path , $reset = false , $prepend = false , $type = 'psr4' );
+        $GNZ11_js =  \GNZ11\Core\Js::instance();
+    }
+    catch( Exception $e )
+    {
+        $app = \Joomla\CMS\Factory::getApplication();
+        if( !\Joomla\CMS\Filesystem\Folder::exists( $GNZ11_path )  )
+        {
+            $app->enqueueMessage('Для работы модуля '.$module->module.'('.$module->title.')'.'  Должна быть установлена библиотека GNZ11' , 'error');
+        }#END IF
+    }
+
+
     JLoader::registerNamespace( 'MenuCategoriesShop\Helpers' , __DIR__ . '/helpers' , $reset = false , $prepend = false , $type = 'psr4' );
 
 
