@@ -7,10 +7,11 @@
 	<license>GNU General Public License</license>
 	<authorEmail></authorEmail>
 	<authorUrl></authorUrl>
-    <version>0.0.3</version>
+    <version>0.0.7</version>
 	<description>MOD_MENU_CATEGORIES_DESC</description>
 	<files>
         <folder>assets</folder>
+        <folder>forms</folder>
 
         <folder>helpers</folder>
         <folder>language</folder>
@@ -51,10 +52,22 @@
 
                 <field name="__v"
                 	type="version"
-                	path_xml="/modules/mod_jshopping_random_m/mod_jshopping_random_m.xml"
+                	path_xml="/modules/mod_menu_categories_shop/mod_menu_categories_shop.xml"
                 	class="__v"
                 	filter="raw" />
-
+				<field name="debug_on"
+					type="radio"
+					default="0"
+					label="MOD_MENU_CATEGORIES_SHOP_DEBUG_ON"
+					description="MOD_MENU_CATEGORIES_SHOP_DEBUG_ON_DESC"
+					class="btn-group btn-group-yesno"
+					showon=""
+					>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				
+				 
 				<!-- Сортировка -->
 				<field name="sort"
 						type="list"
@@ -81,7 +94,24 @@
 					
 					
 			</fieldset>
-
+			<fieldset name="banners" >
+				<field name="data_banners_from" type="subform"
+					   formsource="modules/mod_menu_categories_shop/forms/banners_from_html.xml"
+					   multiple="true"
+					   filter="raw"
+					   label="MOD_MENU_CATEGORIES_SHOP_FROM_BANNERS"
+					   showon=""
+					   description="MOD_MENU_CATEGORIES_SHOP_FROM_BANNERS_DESC" />
+			</fieldset>
+			<fieldset name="footer" >
+				<field name="data_footer_from" type="subform"
+					   formsource="modules/mod_menu_categories_shop/forms/footer_from_html.xml"
+					   multiple="true"
+					   filter="raw"
+					   label="MOD_MENU_CATEGORIES_SHOP_FROM_FOOTER"
+					   showon=""
+					   description="MOD_MENU_CATEGORIES_SHOP_FROM_FOOTER_DESC" />
+			</fieldset>
 
 
 			<fieldset name="advanced">

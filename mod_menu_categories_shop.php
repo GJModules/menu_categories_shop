@@ -26,40 +26,49 @@
      */
     require_once dirname(__FILE__) . '/helper.php';
 
-    $doc = \Joomla\CMS\Factory::getDocument();
-    $doc->addStyleSheet('/modules/mod_menu_categories_shop/assets/css/mod_menu_categories_shop.css');
-    $doc->addScript('/modules/mod_menu_categories_shop/assets/js/mod_menu_categories_shop.js');
-    $Helper = ModMenuCategoriesShopHelper::instance($params);
-
-
-
-    $field_sort = $params->get('sort', 'id');
-    $ordering = $params->get('ordering', 'asc');
-    $show_image = $params->get('show_image',0);
-
-    $category_id = JRequest::getInt('category_id');
-    $category = JTable::getInstance('category', 'jshop');
-    $category->load($category_id);
-    $categories_id = $category->getTreeParentCategories();
-    $categories_arr = $Helper::getCatsArray($field_sort, $ordering, $category_id, $categories_id);
-
-
-    JLoader::import('categories', JPATH_ROOT.'/administrator/components/com_jshopping/models');
-    $_categories = JSFactory::getModel("categories");
-    $categories_arr = $_categories->getTreeAllCategories( ['category_publish'=>1] , "ordering" ,  "asc" );
-
-
-    /*echo'<pre>';print_r( $categories_arr );echo'</pre>'.__FILE__.' '.__LINE__ . PHP_EOL;
-    die(__FILE__ .' '. __LINE__ );*/
+    JLoader::registerNamespace( 'GNZ11' , JPATH_LIBRARIES . '/GNZ11' , $reset = false , $prepend = false , $type = 'psr4' );
+    JLoader::registerNamespace( 'MenuCategoriesShop\Helpers' , __DIR__ . '/helpers' , $reset = false , $prepend = false , $type = 'psr4' );
 
 
 
 
 
-    $jshopConfig = JSFactory::getConfig();
 
-    $layout = $params->get('layout', 'default');
-    require(JModuleHelper::getLayoutPath('mod_menu_categories_shop', $layout));
+//    $categories_arr = ModMenuCategoriesShopHelper::ModuleInit($params);
+
+
+    try
+    {
+        // Code that may throw an Exception or Error.
+        $cacheParams = new stdClass;
+        $cacheParams->cachemode = 'static'/*'id'*/ ;
+        $cacheParams->class = 'ModMenuCategoriesShopHelper';
+        $cacheParams->method = 'ModuleInit';
+        $cacheParams->methodparams = $params;
+        $cacheParams->modeparams = array('id' => 'int' /*, 'module_type' => $module_type*/);
+        $params->set('filters' , []);
+        echo JModuleHelper::moduleCache($module , $params , $cacheParams);
+
+//         throw new \Exception('Code Exception '.__FILE__.':'.__LINE__) ;
+    }
+    catch (\Error $e)
+    {
+        // Executed only in PHP 5, will not be reached in PHP 7
+        echo 'Выброшено исключение: ',  $e->getMessage(), "\n";
+        echo'<pre>';print_r( $e );echo'</pre>'.__FILE__.' '.__LINE__;
+        die(__FILE__ .' '. __LINE__ );
+    }
+
+
+//    echo'<pre>';print_r( $categories_arr );echo'</pre>'.__FILE__.' '.__LINE__ . PHP_EOL;
+//
+//    die(__FILE__ .' '. __LINE__ );
+
+
+
+
+
+
 
     /*echo'<pre>';print_r( $categories_arr );echo'</pre>'.__FILE__.' '.__LINE__ . PHP_EOL;
     die(__FILE__ .' '. __LINE__ );*/

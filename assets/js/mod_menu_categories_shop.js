@@ -23,7 +23,10 @@ window.mod_menu_categories_shop = function () {
     this.__type = false;
     this.__plugin = false;
     this.__name = false;
-    this._params = {};
+    this.__debug = false;
+    this._params = {
+        __mv : null ,
+    };
     // Параметры Ajax по умолчвнию
     this.AjaxDefaultData = {
         group  : null ,
@@ -43,6 +46,7 @@ window.mod_menu_categories_shop = function () {
     }
 
     this.menuStatus = false ;
+    this.isMobile = false ;
     wgnz11.load.svg( ['#icon-fat-chevron'] );
     //
 
@@ -51,6 +55,14 @@ window.mod_menu_categories_shop = function () {
      * @constructor
      */
     this.Init = function () {
+
+        var clickEvent = (function() {
+            if ('ontouchstart' in document.documentElement === true)
+                return 'touchstart';
+            else
+                return 'click';
+        })();
+
         this._params = Joomla.getOptions( 'mod_menu_categories_shop' , this.ParamsDefaultData );
         __v = self._params.development_on ? '' : '?v=' + self._params.__v;
         // Параметры Ajax Default
@@ -58,9 +70,46 @@ window.mod_menu_categories_shop = function () {
         // Добавить слушателей событий
         this.addEvtListener();
 
-        console.log( this._params )
-        console.log( this.AjaxDefaultData );
+        // Обновить счетчик хитов для категории
+        this.updateCategoryHit();
+
+        if ( !this.__debug ){
+            self.load.css( host + 'modules/mod_menu_categories_shop/assets/css/mod_menu_categories_shop.css' + this._params.__mv );
+
+        }
+
+        if ( self.DEVICE.isMobile() ){
+             this.InitMobile();
+        }
+
+
     }
+    /**
+     * INI для мобильных устройств
+     * @constructor
+     */
+    this.InitMobile = function (  ){
+        self.isMobile = true ;
+        self.load.svg(['#icon-close-modal','#icon-chevron-down'   ] );
+        self.load.css( host + 'modules/mod_menu_categories_shop/assets/css/mod_menu_categories_shop.mobile.css' + this._params.__mv , 'only screen and (max-width:480px)' );
+
+    }
+    /**
+     * Обновить счетчик хитов для категории
+     */
+    this.updateCategoryHit = function (  ){
+        if ( typeof self._params.udpHits == "undefined" ) return ;
+        var Data = {
+            'module' : 'menu_categories_shop' ,
+            'method' : 'updateHitsCategory' ,
+            'upd' : self._params.udpHits ,
+        }
+        self.AjaxPost(Data)
+    }
+    /**
+     * Переустановить обработчики события клик по элементам для появления меню
+     * Запуск window.menu_categories_shop.reload();
+     */
     this.reload = function (  ){
         // Добавить слушателей событий
         this.addEvtListener();
@@ -74,8 +123,9 @@ window.mod_menu_categories_shop = function () {
         var wSizeHL = document.querySelector(".header-layout").offsetWidth  ;
         var delta  = wSizeW - wSizeHL ;
 
+        if ( self.isMobile ) return ;
         $('.menu__hidden-content').css({
-           width : (wSizeHL - 3)  + 'px'
+            width : (wSizeHL - 3)  + 'px'
         })
     }
 
@@ -83,30 +133,55 @@ window.mod_menu_categories_shop = function () {
      * Показать меню
      */
     this.menuShow = function (){
-        // Установить размеры меню
-        self.getMenuSize();
-        $('.menu-wrapper').css({ display : 'block' });
-        // Добавить оверлей
-        $('body').append('<div aria-hidden="true" class="page-overlay page-overlay_state_visible"></div>')
-        setTimeout(function (  ){
-            $('body').on('click.menuHide' , self.menuHide ) ;
-        },1000)
+
+        wgnz11.Optimizing.fromTemplate('#mod_menu_categories_shop-Template' , '#mod_menu_categories_shop-Data' , true ).then(function (r){
+            var $body = $('body') ;
+            // Установить размеры меню
+            self.getMenuSize();
+            $('.menu-wrapper').css({ display : 'block' });
+            // Добавить оверлей
+            $body.append('<div aria-hidden="true" class="page-overlay page-overlay_state_visible"></div>');
+
+
+            if ( self.isMobile ){
+                $('ul.menu-categories').parent().addClass('mobile');
+
+            }else{
+                $(  '.menu-categories__link' ).on('mouseover.mod_menu_categories_shop' , self.menuMouseOver );
+            }
+
+
+            setTimeout(function (  ){
+                $body.on('click.menuHide' , self.menuHide ) ;
+            },1000)
+        });
+
+
     }
     /**
      * Скрыть меню
      * @param event
      */
     this.menuHide = function ( event ){
+        // Стереть историю страниц
+        self.historyHeader = [] ;
+
         var $elem = $(event.target);
         var $rootMenu = $elem.closest('.menu-wrapper') ;
-        if ( !$rootMenu[0] ){
+
+
+        if ( !$rootMenu[0]  || $elem.hasClass('modal__close') ){
             $('.menu-wrapper').css({ display : 'none' });
             $('body').off('click.menuHide');
             // Убрать  оверлей
             $('.page-overlay').remove();
+            $(  '.menu-categories__link' ).off('mouseover.mod_menu_categories_shop' );
+            $('#mod_menu_categories_shop-Data').empty();
         }
     }
-
+    /**
+     * Обработка hover мыши
+     */
     this.menuMouseOver = function (  ){
         var $el = $(this);
         var $block = $('.menu-categories');
@@ -116,14 +191,102 @@ window.mod_menu_categories_shop = function () {
         $el.addClass('js-menu-categories__link menu-categories__link_state_hovered')
             .parent().addClass('menu-categories__item_state_hovered')
     }
+    /**
+     * Перелистывание меню вперед для мобильных устройств
+     * @param event
+     */
+    this.slideMenu = function ( event ){
 
+        var $el = $(event.target) ;
+        var $menuWrapperMobile = $el.closest('.menu-wrapper.mobile');
+        var $next =  $el.next() ;
+        var $children = $next.children();
+
+        if ( $el.hasClass( 'menu__all-product' ) ) return ;
+        console.log('mod_menu_categories_shop:slideMenu->$el >>> ' , $el );
+
+        
+        /**
+         * Если находимся в мобильно меню категорий
+         * И следующий элемент(li) есть и он не пустой
+         * и это не заголовок 1 уровня 
+         */
+        if ( $menuWrapperMobile[0] && ( typeof $el.next()[0] !== "undefined" && $children[0] ) && !$el.hasClass('menu__hidden-title') ){
+            event.preventDefault();
+            var $elem = $(event.target);
+            $elem.next().addClass('active' ) ;
+            self.setHead();
+            return false ;
+        }
+        return true ;
+    }
+    /**
+     * Обратное Перелистывание меню
+     * @param event
+     */
+    this.backSlideMenu = function ( event ){
+        var historyText = self.historyHeader[ self.historyHeader.length - 1 ];
+        // удалить последнюю запись в истории
+        self.historyHeader.splice(-1,1)
+
+
+        var $header = $('.modal__header').removeClass('header--active')
+            .find('.modal__heading').text(historyText);
+
+        $('ul.menu-categories').find('.active').removeClass('active')
+    }
+    /**
+     * История страниц мобильного меню
+     * @type {*[]}
+     */
+    this.historyHeader = [];
+    /**
+     * Установка заголовка в мобильном меню
+     */
+    this.setHead = function (){
+        var $active = $('.menu-categories').find('.active') ;
+        var $header = $('.modal__header').addClass('header--active');
+        var _$preA = $active.prev()
+        var text = _$preA.text() ;
+        var href = _$preA.attr('href') ;
+
+        var $heading = $header.find('.modal__heading');
+
+        console.log('mod_menu_categories_shop:setHead->$active >>> ' , $active );
+        console.log('mod_menu_categories_shop:setHead->text >>> ' , text );
+        console.log('mod_menu_categories_shop:setHead->text >>> ' , href );
+        console.log('mod_menu_categories_shop:setHead->$header >>> ' , $header );
+        console.log('mod_menu_categories_shop:setHead->$active >>> ' , $active );
+
+        $('.menu__all-product').attr('href' , href ) ;
+        
+        self.historyHeader.push( $heading.text() )
+        $heading.text( text );
+    }
 
     /**
      * Добавить слушателей событий
      */
     this.addEvtListener = function () {
+        var $body = $('body') ;
         $(  self._params.selector_key ).on('click' , self.menuShow );
-        $(  '.menu-categories__link' ).on('mouseover' , self.menuMouseOver );
+        $body.on('click.menuHide' , '.menu-wrapper_state_animated.mobile .modal__close' ,  self.menuHide );
+
+
+        document.addEventListener('click' , self.slideMenu ) ;
+
+
+
+
+        // $body.on('click.menuHide' , '.menu-wrapper_state_animated.mobile ul.menu-categories > li > a' ,  self.slideMenu );
+        $body.on('click.menuHide' , '.menu__back.button' ,  self.backSlideMenu );
+        $body.on('click.menuHide' , '.page-overlay-protect' ,  function ( evt ){
+            evt.preventDefault();
+            return false ;
+        });
+
+
+
     };
 
 
@@ -161,11 +324,12 @@ window.mod_menu_categories_shop = function () {
         this.AjaxDefaultData.plugin = this._params.__name;
         this.AjaxDefaultData.module = this._params.__module;
         this._params.__name = this._params.__name || this._params.__module;
+
+
+        this.__debug = this._params.__debug || false ;
     }
     this.Init();
 };
-document.addEventListener('GNZ11Loaded', function() {
-    window.mod_menu_categories_shop.prototype = new GNZ11();
-    window.menu_categories_shop = new window.mod_menu_categories_shop();
-})
 
+window.mod_menu_categories_shop.prototype = new GNZ11();
+window.menu_categories_shop = new window.mod_menu_categories_shop();

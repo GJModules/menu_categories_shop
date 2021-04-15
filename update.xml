@@ -4,7 +4,7 @@
         <description><![CDATA[JoomShopping - menu categories By Gartes update]]></description>
         <type>module</type>
         <element>mod_menu_categories_shop</element>
-        <version>0.0.3</version>
+        <version>0.0.7</version>
         <client>0</client>
         <infourl title="Joomla!">https://github.com/Gartes-JoomShopping/mod_jshopping_random_m/blob/main/README.md</infourl>
         <downloads>

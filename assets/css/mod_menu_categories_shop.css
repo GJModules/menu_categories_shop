@@ -1,3 +1,4 @@
+.main-categories__toggle{display: none;}
 .menu-outer {
     display: none;
     margin-right: 24px
@@ -28,7 +29,9 @@
 .menu-wrapper_state_animated {
     animation: actionsShowing .5s
 }
-
+.menu-wrapper_state_animated .modal__header{
+    display: none;
+}
 .menu-wrapper_state_static {
     position: relative;
     top: 0;
@@ -42,14 +45,17 @@
         z-index: 999
     }
 }
-
+a.menu__all-product,
+button.menu__back{
+    display: none;
+}
 .menu-categories {
     position: relative;
     width: 300px;
     border-radius: 4px;
     padding-top: 24px;
     padding-bottom: 24px;
-    background-color: #fff
+    background-color: #fff;
 }
 
 .menu-categories_type_main {
@@ -92,13 +98,14 @@
 }
 
 .menu-categories__item_state_hovered .menu__hidden-content {
-    display: flex
+    display: flex;
 }
 
 .menu-categories__item_state_hovered .menu__hidden-column {
     display: block;
     display: none;
 }
+.menu__hidden-column.menu__hidden-column_no_padding,
 .menu-categories__item_state_hovered .menu__hidden-column:nth-child(-n+3){
     display: block;
 }
@@ -133,7 +140,7 @@
     padding-left: 16px;
     padding-right: 24px;
     box-sizing: border-box;
-    
+
     line-height: 31px;
     transition: all .3s ease;
 }
@@ -157,11 +164,11 @@
     right: 16px;
     top: 12px;
     fill: currentColor;
-    transition: all .3s ease
+    transition: all .3s ease;
 }
 
 .menu-categories__link-icon {
-    vertical-align: middle; 
+    vertical-align: middle;
     margin-left: 12px
 }
 
@@ -219,7 +226,7 @@
     overflow: hidden
 }
 
-.menu__hidden-column_no_padding { 
+.menu__hidden-column_no_padding {
     position: relative;
     right: -8px;
     top: -8px;
@@ -280,7 +287,8 @@
 
 .menu__main-cats_type_bottom {
     width: 100%;
-    margin-top: 10px
+    margin-top: 10px;
+    border-top: 1px solid #f5f5f5;
 }
 
 .menu__main-brands, .menu__main-cats_type_bottom {
@@ -299,8 +307,8 @@
 }
 
 .menu__main-brand img {
-    max-width: 64px;
-    max-height: 32px
+    max-width: 55px;
+    max-height: 32px;
 }
 
 .menu__link {

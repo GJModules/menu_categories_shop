@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+<!--	<fieldset addfieldpath="/libraries/GNZ11/Extensions/Fields/jshopping" />-->
+	<!-- JoomShoping Categories -->
+	<field name="category_id"
+		   type="listjsparentcategory"
+		   default=""
+		   required=""
+		   label="MOD_JSHOPPING_RANDOM_M_CATEGORIES"
+		   description="MOD_JSHOPPING_RANDOM_M_CATEGORIES_DESC"
+		   class="span8 categories "
+		   multiple="0"
+		   parent_id="0"
+		   readonly=""
+		   showon=""
+		   filter="raw" />
+	<field name="html"
+		type="textarea"
+		default=""
+		class="span12 html "
+		rows="24"
+		cols="10"
+		readonly=""
+		required="1"
+		label="BANNERS_FROM_HTML_HTML"
+		description="BANNERS_FROM_HTML_HTML_DESC"
+		showon=""
+		hint=""
+		filter="raw" />
+
+
+	 
+		
+		
+     	
+     		
+     	
+
+
+</form>
